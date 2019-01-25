@@ -502,7 +502,10 @@ def main(_):
     for model in models.values():
       model.import_ops()
     sv = tf.train.Supervisor(logdir=FLAGS.save_path)
-    config_proto = tf.ConfigProto(allow_soft_placement=soft_placement)
+    gpu_options = tf.GPUOptions(allow_growth=True)
+    config_proto = tf.ConfigProto(
+      gpu_options=gpu_options,
+      allow_soft_placement=soft_placement)
     with sv.managed_session(config=config_proto) as session:
       for i in range(config.max_max_epoch):
         lr_decay = config.lr_decay ** max(i + 1 - config.max_epoch, 0.0)
